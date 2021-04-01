@@ -9,11 +9,16 @@ app.config["MONGO_URI"] =  "mongodb://localhost:27017/mars.app"
 
 @app.route("/")
 def echo():
-    return render_template("index.html, text")
+    mars = mongo.db.mars.find_all()
+    return render_template("index.html, mars = mars")
 
 
 @app.route("/scrape")
 def scraper():
+    mars = mongo.db.mars
+    mars_data = scrape_mars.scrape()
+    mars.update({}, mars_data, upsert=True)
+    return redirect("/",code=302)
 
 
 
