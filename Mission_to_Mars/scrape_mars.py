@@ -7,16 +7,18 @@ def scrape():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome',**executable_path, headless=False)
 
-    mars = {}
+    news = {}
 
-    url = "https://redplanet.com"
+    url = "https://redplanetscience.com"
     browser.visit(url)
 
     html = browser.html
     soup = BeautifulSoup(html, "html.parser")
 
-    
+    news['title'] = soup.find('div', class_='content_title').get_text()
+    news['paragraph'] = soup.find('div', class_='article_teaser_body').get_text()
 
+    # quit the browser
     browser.quit()
 
-    return mars
+    return news
