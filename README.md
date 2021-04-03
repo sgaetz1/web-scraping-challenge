@@ -8,7 +8,7 @@ The Jupyter notebok is then converted into a Python script called ```scrape_mars
 
 In ```app.py``` a route called ```/scrape``` imports the ```scrape_mars.py``` script and calls the ```scrape``` function. The return value gets stored in Mongo as a Python dictionary.
 
-The root route ```/``` in ```app.py``` queries the Mongo database and passes the mars data into the template HTML file called ```index.html```. This takes the Mars data dictionary and displays all of the data on the web page.
+The root route ```/``` in ```app.py``` queries the Mongo database and passes the Mars data into the template HTML file called ```index.html```. This takes the Mars data dictionary and displays all of the data on the web page.
 
 To use this application, do the following:
 
