@@ -4,7 +4,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 def scrape():
-
+    # get news title and paragraph
+    # setup splinter
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome',**executable_path, headless=False)
 
@@ -22,7 +23,7 @@ def scrape():
     # quit the browser
     browser.quit()
 
-
+    # get featured image
     # setup splinter
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=False)
@@ -55,5 +56,74 @@ def scrape():
     html_table=df.to_html()
     html_table.replace('\n', '')
     mars['table'] = html_table
+
+    # hemisphere images and titles
+
+    # setup splinter
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+
+    url= 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    html = browser.html
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # save links to a list to navigate to each hemisphere page
+    links=[]
+
+    results = soup.find_all('div', class_="item")
+    for result in results:
+        anchor = result.find('a', class_='itemLink')
+        href = anchor['href']
+        links.append(href)
+
+    browser.quit()
+
+    # setup splinter
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+
+    titles=[]
+    image_urls=[]
+
+    for link in links:
+        
+
+        url= 'https://marshemispheres.com/'
+
+        browser.visit(url+link)
+
+        html = browser.html
+        soup = BeautifulSoup(html, 'html.parser')
+
+        results = soup.find_all('div', class_='cover')
+    
+        for result in results:
+
+            title = result.find('h2', class_="title").text
+            titles.append(title)
+
+
+        images = soup.find_all('div', class_='wide-image-wrapper')
+
+        for image in images:
+
+            img = image.find('img', class_='wide-image')
+            image_url = url + img['src'] 
+            image_urls.append(image_url)
+
+    browser.quit() 
+
+    both = zip(titles,image_urls)
+
+    hemisphere_image_urls = []
+    for title, image in both:
+        dictionary = {}
+        dictionary['title']=title
+        dictionary['image']=image
+        hemisphere_image_urls.append(dictionary)  
+
+    mars['hemispheres'] = hemisphere_image_urls
 
     return mars
